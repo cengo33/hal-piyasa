@@ -620,7 +620,6 @@ const ProductHomeView = ({ products }) => {
           </tbody>
         </table>
       </div>
-      </div>
     </motion.div>
   );
 };
