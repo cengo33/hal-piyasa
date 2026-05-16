@@ -37,9 +37,9 @@ const INITIAL_PRODUCTS = [
 const MARKET_ROLES = ["Çiftçi", "Komisyoncu", "Tüccar", "Manav", "Market"];
 const MARKET_PREDICTIONS = ["Artar", "Sabit Kalır", "Düşer"];
 
-const MarketAdviceModal = ({ isOpen, onClose, initialProducts, onVoteSubmitted }) => {
+const MarketAdviceModal = ({ isOpen, onClose, initialProducts, initialRoles, onVoteSubmitted }) => {
   const [step, setStep] = useState(1);
-  const [roles, setRoles] = useState(MARKET_ROLES);
+  const [roles, setRoles] = useState(initialRoles || MARKET_ROLES);
   const [products, setProducts] = useState(initialProducts.map(p => p.name));
   const [predictions, setPredictions] = useState(MARKET_PREDICTIONS);
   const [selectedRole, setSelectedRole] = useState('');
@@ -328,11 +328,43 @@ const Login = ({ onLogin }) => {
   );
 };
 
-const AdminDashboard = ({ products, setProducts, onLogout }) => {
+const AdminDashboard = ({ products, setProducts, roles, setRoles, onLogout }) => {
   const [activeTab, setActiveTab] = useState('products');
   const [editingPriceProduct, setEditingPriceProduct] = useState(null);
   const [historyPrices, setHistoryPrices] = useState(Array(7).fill(''));
   const [newProduct, setNewProduct] = useState({ name: '', price: '', trend: '', status: 'up', confidence: '' });
+  const [newRole, setNewRole] = useState('');
+  const [votes, setVotes] = useState([]);
+
+  useEffect(() => {
+    const fetchVotes = async () => {
+      const { data } = await supabase.from('votes').select('*').order('created_at', { ascending: false });
+      if (data) setVotes(data);
+    };
+    if (activeTab === 'votes') fetchVotes();
+  }, [activeTab]);
+
+  const addRole = async () => {
+    if (!newRole) return;
+    try {
+      const { data, error } = await supabase.from('roles').insert([{ name: newRole }]).select();
+      if (error) throw error;
+      setRoles([...roles, data[0]]);
+      setNewRole('');
+    } catch (err) {
+      console.error("Error adding role:", err);
+    }
+  };
+
+  const deleteRole = async (id) => {
+    try {
+      const { error } = await supabase.from('roles').delete().eq('id', id);
+      if (error) throw error;
+      setRoles(roles.filter(r => r.id !== id));
+    } catch (err) {
+      console.error("Error deleting role:", err);
+    }
+  };
 
   const addProduct = async () => {
     if (!newProduct.name || !newProduct.price) return;
@@ -416,7 +448,8 @@ const AdminDashboard = ({ products, setProducts, onLogout }) => {
 
       <div className="admin-nav">
         <div className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}>Ürün Yönetimi</div>
-        <div className={`admin-nav-item ${activeTab === 'stats' ? 'active' : ''}`} onClick={() => setActiveTab('stats')}>İstatistikler</div>
+        <div className={`admin-nav-item ${activeTab === 'roles' ? 'active' : ''}`} onClick={() => setActiveTab('roles')}>Sıfat Yönetimi</div>
+        <div className={`admin-nav-item ${activeTab === 'votes' ? 'active' : ''}`} onClick={() => setActiveTab('votes')}>Tavsiye Logları</div>
         <div className={`admin-nav-item ${activeTab === 'settings' ? 'active' : ''}`} onClick={() => setActiveTab('settings')}>Sistem Ayarları</div>
       </div>
 
@@ -500,11 +533,67 @@ const AdminDashboard = ({ products, setProducts, onLogout }) => {
               </div>
             )}
 
-            {activeTab === 'stats' && (
-              <div style={{ textAlign: 'center', padding: '3rem' }}>
-                <Activity size={48} color="var(--accent-primary)" style={{ marginBottom: '1rem' }} />
-                <h3>Piyasa Verileri Yükleniyor...</h3>
-                <p style={{ color: 'var(--text-secondary)' }}>Bu modül bir sonraki güncelleme ile aktif olacaktır.</p>
+            {activeTab === 'roles' && (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                  <h3>Piyasa Sıfatları (Roller)</h3>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input placeholder="Yeni Sıfat Ekle" value={newRole} onChange={(e) => setNewRole(e.target.value)} />
+                    <button onClick={addRole} className="btn-primary"><PlusCircle size={20} /></button>
+                  </div>
+                </div>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                      <th style={{ padding: '1rem' }}>SIFAT ADI</th>
+                      <th style={{ padding: '1rem', textAlign: 'right' }}>İŞLEMLER</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {roles.map(role => (
+                      <tr key={role.id} style={{ borderBottom: '1px solid var(--glass-border)' }}>
+                        <td style={{ padding: '1rem' }}>{role.name}</td>
+                        <td style={{ padding: '1rem', textAlign: 'right' }}>
+                          <button onClick={() => deleteRole(role.id)} style={{ color: 'var(--danger)', background: 'none', border: 'none', cursor: 'pointer' }}>
+                            <Trash2 size={18} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {activeTab === 'votes' && (
+              <div>
+                <h3 style={{ marginBottom: '2rem' }}>Son Kullanıcı Tavsiyeleri</h3>
+                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ textAlign: 'left', borderBottom: '1px solid var(--glass-border)', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                        <th style={{ padding: '1rem' }}>TARİH</th>
+                        <th style={{ padding: '1rem' }}>SIFAT</th>
+                        <th style={{ padding: '1rem' }}>ÜRÜN</th>
+                        <th style={{ padding: '1rem' }}>TAHMİN</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {votes.map(vote => (
+                        <tr key={vote.id} style={{ borderBottom: '1px solid var(--glass-border)', fontSize: '0.9rem' }}>
+                          <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>{new Date(vote.created_at).toLocaleString('tr-TR')}</td>
+                          <td style={{ padding: '1rem' }}>{vote.role}</td>
+                          <td style={{ padding: '1rem' }}>{vote.product_name}</td>
+                          <td style={{ padding: '1rem' }}>
+                            <span className={`badge ${vote.prediction === 'Artar' ? 'badge-up' : vote.prediction === 'Düşer' ? 'badge-down' : ''}`} style={{ fontSize: '0.75rem' }}>
+                              {vote.prediction}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             )}
 
@@ -767,7 +856,7 @@ const StatsView = ({ products }) => {
   );
 };
 
-const MainApp = ({ products, onAdminClick, onRefresh }) => {
+const MainApp = ({ products, roles, onAdminClick, onRefresh }) => {
   const [activeView, setActiveView] = useState('home'); // home, stats
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -785,6 +874,7 @@ const MainApp = ({ products, onAdminClick, onRefresh }) => {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         initialProducts={products}
+        initialRoles={roles.map(r => r.name)}
         onVoteSubmitted={onRefresh}
       />
       
@@ -859,12 +949,18 @@ const App = () => {
   const [view, setView] = useState('landing'); // landing, login, dashboard
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [products, setProducts] = useState(INITIAL_PRODUCTS);
+  const [roles, setRoles] = useState([]);
 
   const fetchData = async () => {
     try {
       // Fetch Products
       const { data: dbProducts, error: pError } = await supabase.from('products').select('*');
       if (pError) throw pError;
+
+      // Fetch Roles
+      const { data: dbRoles, error: rError } = await supabase.from('roles').select('*');
+      if (rError) throw rError;
+      setRoles(dbRoles || []);
       
       // Fetch Votes summary
       const { data: dbVotes, error: vError } = await supabase.from('votes').select('*');
@@ -910,6 +1006,7 @@ const App = () => {
           <MainApp 
             key="main" 
             products={products} 
+            roles={roles}
             onAdminClick={handleAdminAccess}
             onRefresh={fetchData}
           />
@@ -930,6 +1027,8 @@ const App = () => {
             key="dashboard" 
             products={products} 
             setProducts={setProducts}
+            roles={roles}
+            setRoles={setRoles}
             onLogout={() => {
               setIsAuthenticated(false);
               setView('landing');
