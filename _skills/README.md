@@ -56,3 +56,52 @@ description: Bu skill ne zaman kullanılır?
 ## Çıktı Formatı
 ...
 ```
+
+## Pazarlama Yetkinlikleri (Marketing Skills)
+
+
+`https://github.com/coreyhaines31/marketingskills` adresinden eklenen 43 adet pazarlama ve büyüme (growth) odaklı skill `_skills/` klasörüne entegre edilmiştir. Bu skill'ler şunlardır:
+
+- **ab-testing**: A/B testi stratejileri ve uygulamaları.
+- **ad-creative**: Reklam görselleri ve kreatif tasarımlar.
+- **ads**: Genel reklam kampanyaları ve yönetimi.
+- **ai-seo**: Yapay zeka destekli arama motoru optimizasyonu.
+- **analytics**: Analitik, metrik ve veri takibi.
+- **aso**: App Store Optimization (Uygulama Mağazası Optimizasyonu).
+- **churn-prevention**: Kullanıcı kaybı (churn) önleme stratejileri.
+- **co-marketing**: Ortak pazarlama kampanyaları.
+- **cold-email**: Soğuk e-posta (cold outreach) şablonları ve taktikleri.
+- **community-marketing**: Topluluk odaklı pazarlama.
+- **competitor-profiling**: Rakip analizi ve profilleme.
+- **competitors**: Rakip takibi.
+- **content-strategy**: İçerik stratejisi oluşturma.
+- **copy-editing**: Metin düzenleme ve iyileştirme.
+- **copywriting**: Reklam yazarlığı ve ikna edici metinler.
+- **cro**: Conversion Rate Optimization (Dönüşüm Oranı Optimizasyonu).
+- **customer-research**: Müşteri araştırması ve anketler.
+- **directory-submissions**: Dizin sitelerine kayıt ve SEO backlinks.
+- **emails**: E-posta pazarlama stratejileri.
+- **free-tools**: Ücretsiz araçlar/mıknatıslar ile lead toplama.
+- **image**: Görsel pazarlama ve tasarım.
+- **launch**: Ürün/özellik lansman stratejileri.
+- **lead-magnets**: Lead magnet tasarımı ve kurgusu.
+- **marketing-ideas**: Pazarlama fikirleri ve beyin fırtınası.
+- **marketing-plan**: Pazarlama planı şablonları.
+- **marketing-psychology**: Pazarlama psikolojisi prensipleri.
+- **onboarding**: Kullanıcı alıştırma (onboarding) süreçleri.
+- **paywalls**: Ödeme duvarı (paywall) optimizasyonu.
+- **popups**: Popup ve form stratejileri.
+- **pricing**: Fiyatlandırma stratejileri ve modelleri.
+- **product-marketing**: Ürün pazarlaması (product marketing).
+- **programmatic-seo**: Programatik SEO uygulamaları.
+- **prospecting**: Potansiyel müşteri arama ve filtreleme.
+- **referrals**: Tavsiye (referral) programları.
+- **revops**: Gelir operasyonları (Revenue Operations).
+- **sales-enablement**: Satış ekiplerini destekleyici içerik ve araçlar.
+- **schema**: Schema markup ve yapılandırılmış veri.
+- **seo-audit**: Kapsamlı SEO denetimi.
+- **signup**: Üyelik ve kayıt süreçleri optimizasyonu.
+- **site-architecture**: Web sitesi mimarisi ve UX.
+- **sms**: SMS pazarlaması taktikleri.
+- **social**: Sosyal medya pazarlaması ve yönetimi.
+- **video**: Video pazarlama stratejileri.
