@@ -23,6 +23,19 @@ python send_message.py --to +905076231510 --message "selam naber?"
 python send_message.py -t +905076231510 -m "selam naber?"
 ```
 
+### 3. Gelen Cevapları Okuma
+Hedef numaradan gelen cevapları ve tüm konuşma geçmişini terminalinizde listelemek için `read_replies.py` script'ini kullanabilirsiniz:
+
+```bash
+python read_replies.py --to +905076231510
+```
+
+**Kısa Parametreler:**
+```bash
+python read_replies.py -t +905076231510
+```
+
+
 ---
 
 ## 🛠️ Nasıl Çalışır? (API Akışı)
