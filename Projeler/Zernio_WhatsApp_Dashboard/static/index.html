@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zernio WhatsApp Web Dashboard</title>
+    <!-- Google Fonts: Inter (reading/UI) & Outfit (headers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-bg-decor1"></div>
+    <div class="glass-bg-decor2"></div>
+
+    <div class="dashboard-wrapper">
+        <!-- Main Container -->
+        <main class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Sidebar Header -->
+                <div class="sidebar-header">
+                    <div class="brand">
+                        <i class="fa-solid fa-comments-dollar brand-icon"></i>
+                        <h1>Zernio</h1>
+                    </div>
+                    <span class="sub-brand">Inbox Panel</span>
+                </div>
+
+                <!-- Search/Filters -->
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="chat-search" placeholder="Sohbetlerde ara...">
+                </div>
+
+                <!-- Conversations List -->
+                <div class="conversations-list-wrapper">
+                    <div id="conversations-loading" class="list-loader">
+                        <i class="fa-solid fa-circle-notch fa-spin"></i>
+                        <span>Sohbetler yükleniyor...</span>
+                    </div>
+                    <ul id="conversations-list" class="conversations-list">
+                        <!-- Dynamic list items will be injected here -->
+                    </ul>
+                </div>
+
+                <!-- Sidebar Footer (Initiate New Chat) -->
+                <div class="sidebar-footer">
+                    <button id="open-initiate-modal-btn" class="btn btn-primary btn-full">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Yeni Sohbet Başlat</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Chat Area -->
+            <section class="chat-area">
+                <!-- No Chat Selected State -->
+                <div id="no-chat-state" class="empty-chat-state">
+                    <div class="empty-state-icon">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <h2>Sohbet Seçilmedi</h2>
+                    <p>Mesajlaşmaya başlamak için sol menüden bir sohbet seçin veya yeni bir WhatsApp sandbox konuşması başlatın.</p>
+                </div>
+
+                <!-- Active Chat State -->
+                <div id="active-chat-state" class="active-chat-container d-none">
+                    <!-- Chat Header -->
+                    <header class="chat-header">
+                        <div class="active-chat-info">
+                            <div class="chat-avatar">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+                            <div class="chat-meta">
+                                <h2 id="active-chat-name">Seçili Sohbet</h2>
+                                <span id="active-chat-platform" class="badge">whatsapp</span>
+                            </div>
+                        </div>
+
+                        <!-- Sandbox Status Widget -->
+                        <div id="sandbox-status-widget" class="sandbox-widget">
+                            <div class="widget-indicator pulse-green"></div>
+                            <div class="widget-details">
+                                <span class="widget-title">Sandbox Oturumu Aktif</span>
+                                <span id="sandbox-number" class="widget-subtitle">+1 202 908 7457</span>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Messages List -->
+                    <div id="messages-list" class="messages-list">
+                        <!-- Dynamic message bubbles will be injected here -->
+                    </div>
+
+                    <!-- Input Bar -->
+                    <footer class="chat-input-bar">
+                        <form id="message-form" class="input-form">
+                            <input type="text" id="message-input" placeholder="Bir mesaj yazın..." autocomplete="off">
+                            <button type="submit" class="send-btn">
+                                <i class="fa-solid fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </footer>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Initiate Conversation Modal -->
+    <div id="initiate-modal" class="modal-backdrop d-none">
+        <div class="modal-card">
+            <header class="modal-header">
+                <h3><i class="fa-solid fa-paper-plane modal-header-icon"></i> Yeni Sohbet Başlat</h3>
+                <button id="close-modal-btn" class="close-btn">&times;</button>
+            </header>
+            <main class="modal-body">
+                <p class="modal-notice">
+                    <strong>Bilgi:</strong> WhatsApp politikaları gereği yeni bir numara ile konuşma başlatmak için öncelikle onaylı <code>sandbox_start</code> şablonu (template) gönderilir. Alıcı onayladığında serbest mesajlaşma penceresi açılır.
+                </p>
+                <div class="form-group">
+                    <label for="initiate-phone">Alıcı Telefon Numarası (E164 formatında):</label>
+                    <input type="text" id="initiate-phone" placeholder="Örn: +905076231510" value="+905076231510">
+                </div>
+                <div id="initiate-error" class="error-msg d-none"></div>
+                <div id="initiate-success" class="success-msg d-none">Konuşma başlatıldı! Yönlendiriliyorsunuz...</div>
+            </main>
+            <footer class="modal-footer">
+                <button id="cancel-modal-btn" class="btn btn-secondary">İptal</button>
+                <button id="submit-initiate-btn" class="btn btn-primary">
+                    <i id="initiate-spinner" class="fa-solid fa-circle-notch fa-spin d-none"></i>
+                    <span>Şablon Gönder ve Başlat</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
