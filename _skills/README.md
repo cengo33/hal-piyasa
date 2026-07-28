@@ -29,7 +29,7 @@ Antigravity bir göreve başlamadan önce ilgili skill'i okuyarak nasıl davrana
 | 16 | `supabase-postgres-best-practices` | Supabase RLS, veritabanı fonksiyonları ve query optimizasyonu kuralları | Tüm projeler |
 | 17 | `notion-api-rules` | Notion MCP/API dualite, Idempotency ve Rate Limiting standartları | Tüm projeler |
 | 18 | `railway-deploy-rules` | Railway startup delays, fail-fast env config ve deploy stabilitesi | Tüm projeler |
-| 19 | `apify-scraping-rules` | Apify Store hazır aktör kullanımı, maliyet/hız optimizasyonu (Cheerio) | 🤖 `musteri-kazanim` vb. |
+| 19 | `apify-scraping-rules` | Apify Store seçimi, X içerik ve kitle Actor yönlendirmesi, maliyet/hız optimizasyonu | 🤖 `musteri-kazanim` vb. |
 | 20 | `telegram-bot-rules` | getUpdates conflict çözümü (webhook/polling), alert fatigue önleme | Tüm projeler |
 | 21 | `llm-structured-output-rules` | OpenAI/Anthropic/Groq için Pydantic ve JSON output zorunlulukları | Tüm projeler |
 ---
